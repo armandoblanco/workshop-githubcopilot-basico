@@ -137,20 +137,23 @@ GitHub Copilot es un **asistente de programación impulsado por IA** que se inte
 La clave para obtener buenos resultados con Copilot está en **cómo describes lo que necesitas**. Los comentarios descriptivos e intencionales guían mejor a Copilot que instrucciones rígidas paso a paso.
 
 **❌ Prompt débil:**
-```python
-# función
-def f():
-    pass
 ```
+Desarrolla mi app bancaria
+```
+
+> ¿Qué está mal? No hay contexto del negocio, ni tecnología, ni qué se espera como resultado. Copilot tiene que **adivinar** todo.
 
 **✅ Prompt efectivo:**
 ```python
 # Endpoint para obtener el saldo actual de una cuenta bancaria de Contoso Banco
 # Recibe el número de cuenta como parámetro
 # Retorna el saldo disponible y la fecha de última actualización
+# Usa Flask-RESTX con decoradores de documentación Swagger
 ```
 
-> Observa cómo el segundo comentario le da a Copilot **contexto**, **intención** y **detalles** sobre lo que necesitas.
+> Observa cómo el segundo comentario le da a Copilot **contexto** (Contoso Banco), **intención** (obtener saldo), **detalles** (parámetros y retorno) y **tecnología** (Flask-RESTX). Cuanto más específico seas con la intención, mejores serán las sugerencias.
+
+> 📚 **¿Quieres más ejemplos de buenas prácticas?** Consulta el repositorio [github/awesome-copilot](https://github.com/github/awesome-copilot) — contiene instrucciones, agentes y configuraciones contribuidas por la comunidad para sacar el máximo provecho de GitHub Copilot.
 
 ### ¿Qué es @workspace?
 
@@ -379,20 +382,14 @@ Este es un sistema bancario para Contoso Banco que gestiona clientes, cuentas y 
 🤖 **PROMPT en Modo Agent:**
 
 ```
-Crea la estructura inicial del proyecto Contoso Banco con sus dependencias:
+Crea la estructura inicial del proyecto Contoso Banco.
 
-1. Estructura de carpetas:
-   contoso-banco/
-   ├── app.py
-   ├── requirements.txt (flask, flask-restx, pytest)
-   ├── modelos/
-   │   └── __init__.py
-   ├── static/
-   ├── templates/
-   └── tests/
-       └── __init__.py
-
-2. Instala las dependencias con: pip install -r requirements.txt
+Necesito un proyecto Python organizado para una API REST con Flask. Debe incluir:
+- Un archivo principal para la aplicación Flask
+- Un archivo de dependencias (necesitamos flask, flask-restx y pytest)
+- Una carpeta para los modelos de datos (con __init__.py para que sea un paquete importable)
+- Carpetas para archivos estáticos, templates HTML y pruebas unitarias
+- Instala las dependencias después de crear la estructura
 ```
 
 📝 **Alternativa manual** (si el agente no ejecuta):
@@ -768,21 +765,14 @@ Asegúrate de que:
 ```
 @workspace Crea pruebas de integración para la API de Contoso Banco en contoso-banco/tests/test_api.py
 
-Usando el test client de Flask, verifica:
+Usando el test client de Flask, necesito verificar que los endpoints principales funcionan correctamente:
+- Que se puedan listar, consultar, crear, actualizar y eliminar clientes
+- Que los endpoints respondan con los códigos HTTP correctos (200, 201, 404, 400)
+- Que al consultar un recurso que no existe se obtenga un error apropiado
+- Que al enviar datos incompletos o inválidos la API rechace la petición
+- Que los endpoints de cuentas también respondan correctamente
 
-1. GET /api/clientes retorna 200 y una lista de clientes
-2. GET /api/clientes/1 retorna 200 y el cliente correcto
-3. GET /api/clientes/999 retorna 404
-4. POST /api/clientes con datos válidos retorna 201
-5. POST /api/clientes con datos faltantes retorna 400
-6. PUT /api/clientes/1 actualiza correctamente
-7. DELETE /api/clientes/1 retorna 200 o 204
-8. GET /api/cuentas retorna 200
-
-Usa el test client de Flask:
-- app.test_client() para hacer las peticiones
-- json=data para enviar datos JSON
-- response.get_json() para leer la respuesta
+Cada test debe ser independiente y usar nombres descriptivos en español que expliquen qué escenario verifican.
 ```
 
 ---
