@@ -58,6 +58,63 @@ Este workshop práctico de **2 horas** te guiará en el desarrollo de un **Siste
 
 > 💡 La complejidad es **intencionalmente baja**. El objetivo NO es construir una app robusta, sino mostrar cómo **Copilot acelera cada fase del desarrollo**.
 
+### Arquitectura de la Solución
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     NAVEGADOR WEB                           │
+│                                                             │
+│  ┌─────────────────────┐    ┌───────────────────────────┐   │
+│  │   Frontend HTML     │    │      Swagger UI            │   │
+│  │                     │    │   (auto-generado por       │   │
+│  │  Bootstrap 5 (CDN)  │    │    Flask-RESTX)            │   │
+│  │  JavaScript vanilla │    │                           │   │
+│  │  fetch() → API      │    │   /api/doc                │   │
+│  │                     │    │                           │   │
+│  │  /                  │    │                           │   │
+│  └────────┬────────────┘    └─────────┬─────────────────┘   │
+│           │                           │                     │
+└───────────┼───────────────────────────┼─────────────────────┘
+            │  HTTP (mismo origen)       │
+            ▼                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    SERVIDOR FLASK                            │
+│                    (app.py)                                  │
+│                                                             │
+│  ┌──────────────┐   ┌──────────────────────────────────┐    │
+│  │ render_       │   │        Flask-RESTX API           │    │
+│  │ template()   │   │                                  │    │
+│  │              │   │  /api/clientes    → CRUD         │    │
+│  │ index.html   │   │  /api/cuentas     → CRUD         │    │
+│  │              │   │  /api/transacciones → CRUD        │    │
+│  └──────────────┘   └──────────┬───────────────────────┘    │
+│                                │                            │
+│                                ▼                            │
+│                  ┌──────────────────────────┐               │
+│                  │   Modelos (Python)       │               │
+│                  │                          │               │
+│                  │  modelos/cliente.py      │               │
+│                  │  modelos/cuenta.py       │               │
+│                  │  modelos/transaccion.py  │               │
+│                  │                          │               │
+│                  │  Datos en memoria        │               │
+│                  │  (diccionarios Python)   │               │
+│                  └──────────────────────────┘               │
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  pytest  →  tests/test_cliente.py                    │   │
+│  │             tests/test_api.py                        │   │
+│  └──────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Flujo de la aplicación:**
+1. El usuario abre `http://127.0.0.1:5000/` → Flask sirve `index.html` con `render_template`
+2. El JavaScript dentro del HTML usa `fetch('/api/...')` para consumir la API REST
+3. Flask-RESTX enruta cada petición al endpoint correspondiente (clientes, cuentas, transacciones)
+4. Los modelos Python procesan la lógica y almacenan datos en diccionarios en memoria
+5. Swagger UI está disponible en `/api/doc` para explorar y probar la API
+
 ---
 
 ## 🧠 Conceptos Clave de GitHub Copilot
@@ -351,27 +408,32 @@ El modelo debe incluir:
 
 ---
 
-### Paso 1.5: Crear el modelo de cuentas con autocompletado
+### Paso 1.5: Crear el modelo de cuentas bancarias
 
-Ahora experimentaremos con el **autocompletado inline** de Copilot. En lugar de usar el chat, escribirás directamente en el editor.
+Ahora usaremos Copilot en **Modo Agent** para generar el modelo de cuentas, siguiendo el mismo patrón que usamos con clientes.
 
-📍 **Instrucciones:**
-1. Crea un nuevo archivo: `contoso-banco/modelos/cuenta.py`
-2. Escribe el siguiente comentario y **observa cómo Copilot sugiere el código**:
+🤖 **PROMPT en Modo Agent:**
 
-```python
-# Modelo de cuentas bancarias para Contoso Banco
-# Tipos de cuenta: ahorro, corriente
-# Estados: activa, inactiva, bloqueada
-# Campos: id, cliente_id, numero_cuenta, tipo_cuenta, saldo, estado, fecha_apertura
-# Base de datos simulada en memoria con datos de ejemplo
+```
+Crea el archivo contoso-banco/modelos/cuenta.py con el modelo de datos para las cuentas bancarias de Contoso Banco.
+
+El modelo debe incluir:
+- Un diccionario en memoria como base de datos simulada
+- Datos de ejemplo precargados (2-3 cuentas asociadas a los clientes existentes)
+- Campos: id, cliente_id, numero_cuenta, tipo_cuenta (ahorro/corriente), saldo, estado (activa/inactiva/bloqueada), fecha_apertura
+- Funciones para: obtener todas, obtener por id, crear, actualizar, eliminar
+- Validación: el saldo no puede ser negativo
+- Cada función debe tener un comentario en español que describa su propósito
+
+Sigue el mismo patrón y estilo que modelos/cliente.py
 ```
 
-3. Presiona **Enter** después del comentario
-4. Copilot debería empezar a sugerir el código. Presiona **Tab** para aceptar cada sugerencia
-5. Si la sugerencia no es lo que esperabas, presiona **Esc** y ajusta tu comentario
+📝 **Observa:**
+- ¿Copilot detectó el patrón de `cliente.py` y generó código consistente?
+- ¿Los datos de ejemplo usan `cliente_id` que coinciden con los clientes existentes?
+- ¿Incluyó la validación de saldo negativo que pediste?
 
-> 🌟 **Momento wow:** Observa cómo Copilot genera un módulo completo incluyendo datos de ejemplo, funciones CRUD y validaciones, solo a partir de los comentarios. ¡Cada persona puede obtener un resultado ligeramente diferente!
+> 🌟 **Momento wow:** Al mencionar "sigue el mismo patrón que modelos/cliente.py", Copilot analiza el archivo existente y replica su estructura. ¡Cada persona puede obtener un resultado ligeramente diferente!
 
 ---
 
