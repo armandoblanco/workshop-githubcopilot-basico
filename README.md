@@ -16,7 +16,7 @@
 - [Conceptos Clave de GitHub Copilot](#-conceptos-clave-de-github-copilot)
 - [Pre-requisitos](#️-pre-requisitos)
 - [Agenda del Workshop](#-agenda-del-workshop)
-- [Ejercicio 1: API REST con Copilot](#-ejercicio-1-api-rest-con-copilot-30-35-min)
+- [Ejercicio 1: API REST con Copilot](#-ejercicio-1-api-rest-con-copilot-35-40-min)
 - [Ejercicio 2: Frontend e Integración](#-ejercicio-2-frontend-e-integración-25-30-min)
 - [Ejercicio 3: Tests y Refactoring](#-ejercicio-3-tests-y-refactoring-20-25-min)
 - [Referencia Rápida](#-referencia-rápida)
@@ -54,9 +54,11 @@ Este workshop práctico de **2 horas** te guiará en el desarrollo de un **Siste
 
 - **Clientes**: datos personales y de contacto
 - **Cuentas bancarias**: tipos de cuenta, saldos, estados
-- **Transacciones**: depósitos, retiros, transferencias
+- **Transacciones** *(bonus)*: depósitos, retiros, transferencias
 
 > 💡 La complejidad es **intencionalmente baja**. El objetivo NO es construir una app robusta, sino mostrar cómo **Copilot acelera cada fase del desarrollo**.
+
+> 📝 **Sobre las transacciones:** Los ejercicios guiados cubren **Clientes** y **Cuentas** como funcionalidad principal. Las **Transacciones** se presentan como un desafío opcional al final del Ejercicio 1 para quienes avancen más rápido. No te preocupes si no llegas a completarlas — el valor del workshop está en el proceso, no en terminar todo.
 
 ### Arquitectura de la Solución
 
@@ -86,7 +88,7 @@ Este workshop práctico de **2 horas** te guiará en el desarrollo de un **Siste
 │  │ template()   │   │                                  │    │
 │  │              │   │  /api/clientes    → CRUD         │    │
 │  │ index.html   │   │  /api/cuentas     → CRUD         │    │
-│  │              │   │  /api/transacciones → CRUD        │    │
+│  │              │   │  /api/transacciones → CRUD (*)    │    │
 │  └──────────────┘   └──────────┬───────────────────────┘    │
 │                                │                            │
 │                                ▼                            │
@@ -96,6 +98,7 @@ Este workshop práctico de **2 horas** te guiará en el desarrollo de un **Siste
 │                  │  modelos/cliente.py      │               │
 │                  │  modelos/cuenta.py       │               │
 │                  │  modelos/transaccion.py  │               │
+│                  │  (*) = bonus/opcional    │               │
 │                  │                          │               │
 │                  │  Datos en memoria        │               │
 │                  │  (diccionarios Python)   │               │
@@ -106,6 +109,8 @@ Este workshop práctico de **2 horas** te guiará en el desarrollo de un **Siste
 │  │             tests/test_api.py                        │   │
 │  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
+
+(*) Transacciones es un desafío opcional (Paso 1.7)
 ```
 
 **Flujo de la aplicación:**
@@ -159,6 +164,8 @@ El `@workspace` es un participante de chat que proporciona contexto sobre todo t
 | Generar código contextual | `@workspace crea un nuevo endpoint similar a los existentes` |
 
 ### Modos de GitHub Copilot Chat
+
+> ⚠️ **Nota importante:** La interfaz de los modos (íconos, ubicación del selector, nombres) puede variar según tu versión de VS Code y la extensión de GitHub Copilot. Si ves una interfaz diferente a la descrita aquí, consulta con el instructor o revisa la [documentación oficial](https://docs.github.com/en/copilot).
 
 GitHub Copilot tiene tres modos principales de operación:
 
@@ -247,7 +254,7 @@ con modelo, servicio y endpoints"
 python3 --version   # Debe ser 3.10 o superior
 code --version      # Visual Studio Code
 git --version       # Git
-pip3 --version      # Gestor de paquetes de Python
+pip --version       # Gestor de paquetes de Python
 ```
 
 > 📝 **NOTA:** Este taller usa datos en memoria (diccionarios de Python) para no requerir instalación de bases de datos. Los datos se pierden al reiniciar la aplicación, pero se cargan datos de ejemplo automáticamente al iniciar.
@@ -270,20 +277,23 @@ pip3 --version      # Gestor de paquetes de Python
 | Hora | Bloque | Actividad | Modo Copilot |
 |------|--------|-----------|--------------|
 | 0:00 - 0:15 | Bienvenida | Setup, configuración e introducción | - |
-| 0:15 - 0:50 | Ejercicio 1 | API REST con Flask + Swagger | Ask → Agent |
-| 0:50 - 1:00 | ☕ Break | Descanso y Q&A rápido | - |
+| 0:15 - 0:55 | Ejercicio 1 | API REST con Flask + Swagger | Ask → Agent |
+| 0:55 - 1:00 | ☕ Break | Descanso y Q&A rápido | - |
 | 1:00 - 1:30 | Ejercicio 2 | Frontend HTML + integración con API | Agent |
 | 1:30 - 1:50 | Ejercicio 3 | Pruebas unitarias y refactoring | Agent + /tests |
 | 1:50 - 2:00 | Cierre | Recap, tips avanzados y recursos | - |
 
 > ⏱️ Los tiempos son aproximados. Ajusta según el ritmo del grupo, pero **nunca excedas 2 horas**.
 
+> 🎓 **Nota para el instructor:** Si la configuración inicial (Setup) toma más de 15 minutos por problemas de instalación, compensa reduciendo el Ejercicio 3: limítalo a solo generar tests con `/tests` (Pasos 3.1–3.3) y omite el refactoring y `/doc` (Pasos 3.4–3.5). Lo más importante es que los participantes completen los Ejercicios 1 y 2.
+
 ---
 
-## 🔬 Ejercicio 1: API REST con Copilot (30-35 min)
+## 🔬 Ejercicio 1: API REST con Copilot (35-40 min)
 
 ### Objetivos
 
+- ✅ Configurar instrucciones de Copilot para el proyecto
 - ✅ Crear la estructura del proyecto Python
 - ✅ Implementar una API REST con Flask-RESTX
 - ✅ Obtener documentación Swagger automática
@@ -323,227 +333,15 @@ Ayúdame a entender:
 
 ---
 
-### Paso 1.2: Crear estructura del proyecto
+### Paso 1.2: Crear instrucciones de Copilot para el proyecto
 
-> 💡 **IMPORTANTE:** Ahora cambia a **Modo Agent** (ícono de robot 🤖). Este modo **PUEDE** crear y modificar archivos.
+> 💡 **¿Por qué ahora?** El archivo `copilot-instructions.md` configura a Copilot para que siga los estándares del proyecto en **todos** los archivos que genere de aquí en adelante. Crearlo antes de escribir código asegura que los modelos, la API y el frontend se generen con las convenciones correctas desde el inicio.
+
+> 💡 **IMPORTANTE:** Cambia a **Modo Agent** (ícono de robot 🤖). Este modo **PUEDE** crear y modificar archivos.
 
 📍 **Cómo activar Modo Agent:**
 1. En Copilot Chat, busca el selector de modo
 2. Selecciona **"Agent"** o el ícono de robot/chispa
-
-🤖 **PROMPT en Modo Agent:**
-
-```
-Crea la estructura de carpetas para el proyecto de Contoso Banco:
-
-contoso-banco/
-├── app.py
-├── requirements.txt
-├── modelos/
-├── static/
-└── templates/
-```
-
-📝 **Alternativa manual** (si el agente no ejecuta):
-```bash
-mkdir -p contoso-banco/modelos
-mkdir -p contoso-banco/static
-mkdir -p contoso-banco/templates
-touch contoso-banco/app.py
-touch contoso-banco/requirements.txt
-```
-
----
-
-### Paso 1.3: Crear las dependencias del proyecto
-
-🤖 **PROMPT en Modo Agent:**
-
-```
-Crea el archivo contoso-banco/requirements.txt con las dependencias necesarias para una API REST con documentación Swagger:
-
-- flask (framework web)
-- flask-restx (API REST con Swagger integrado)
-- pytest (para pruebas unitarias)
-```
-
-📝 **Alternativa manual** — crea `contoso-banco/requirements.txt`:
-```
-flask
-flask-restx
-pytest
-```
-
-**Instalar dependencias:**
-```bash
-cd contoso-banco
-pip install -r requirements.txt
-```
-
----
-
-### Paso 1.4: Crear los modelos de datos con Copilot
-
-Ahora vamos a ver cómo Copilot nos ayuda a escribir código a partir de **comentarios descriptivos**. En lugar de pedirle el código exacto, le daremos contexto e intención.
-
-🤖 **PROMPT en Modo Agent:**
-
-```
-Crea el archivo contoso-banco/modelos/cliente.py con el modelo de datos para los clientes de Contoso Banco.
-
-El modelo debe incluir:
-- Un diccionario en memoria como base de datos simulada
-- Datos de ejemplo precargados (3 clientes ficticios con nombres en español)
-- Campos: id, nombre, email, telefono, direccion
-- Funciones para: obtener todos, obtener por id, crear, actualizar, eliminar
-- Cada función debe tener un comentario en español que describa su propósito
-```
-
-📝 **¿La sugerencia es útil?** Observa el código generado:
-- ¿Copilot usó nombres en español? 
-- ¿Los datos de ejemplo son coherentes con un banco?
-- ¿Necesitas ajustar algún campo?
-
-> 💡 **Tip:** Si Copilot genera el código en inglés, agrega al inicio del prompt: *"Todo el código y comentarios deben estar en español."*
-
----
-
-### Paso 1.5: Crear el modelo de cuentas bancarias
-
-Ahora usaremos Copilot en **Modo Agent** para generar el modelo de cuentas, siguiendo el mismo patrón que usamos con clientes.
-
-🤖 **PROMPT en Modo Agent:**
-
-```
-Crea el archivo contoso-banco/modelos/cuenta.py con el modelo de datos para las cuentas bancarias de Contoso Banco.
-
-El modelo debe incluir:
-- Un diccionario en memoria como base de datos simulada
-- Datos de ejemplo precargados (2-3 cuentas asociadas a los clientes existentes)
-- Campos: id, cliente_id, numero_cuenta, tipo_cuenta (ahorro/corriente), saldo, estado (activa/inactiva/bloqueada), fecha_apertura
-- Funciones para: obtener todas, obtener por id, crear, actualizar, eliminar
-- Validación: el saldo no puede ser negativo
-- Cada función debe tener un comentario en español que describa su propósito
-
-Sigue el mismo patrón y estilo que modelos/cliente.py
-```
-
-📝 **Observa:**
-- ¿Copilot detectó el patrón de `cliente.py` y generó código consistente?
-- ¿Los datos de ejemplo usan `cliente_id` que coinciden con los clientes existentes?
-- ¿Incluyó la validación de saldo negativo que pediste?
-
-> 🌟 **Momento wow:** Al mencionar "sigue el mismo patrón que modelos/cliente.py", Copilot analiza el archivo existente y replica su estructura. ¡Cada persona puede obtener un resultado ligeramente diferente!
-
----
-
-### Paso 1.6: Crear la aplicación Flask con Swagger
-
-🤖 **PROMPT en Modo Agent:**
-
-```
-Crea el archivo contoso-banco/app.py que sea la aplicación principal de Contoso Banco.
-
-Necesito que configure:
-
-1. Flask con Flask-RESTX para tener Swagger UI automático
-2. El título del Swagger: "API de Contoso Banco"
-3. La descripción: "API REST para gestión de clientes, cuentas y transacciones de Contoso Banco"
-4. Versión: "1.0"
-5. Dos namespaces (grupos de endpoints en Swagger):
-   - /api/clientes — operaciones CRUD de clientes
-   - /api/cuentas — operaciones CRUD de cuentas
-
-Para cada namespace incluye endpoints con:
-- GET (listar todos)
-- GET por id
-- POST (crear)
-- PUT (actualizar)
-- DELETE (eliminar)
-
-Usa los modelos de datos de modelos/cliente.py y modelos/cuenta.py
-Cada endpoint debe tener decoradores @ns.doc() para que Swagger muestre la documentación
-Incluye modelos de Swagger con api.model() para documentar los esquemas de request/response
-```
-
----
-
-### Paso 1.7: Ejecutar y explorar Swagger
-
-🤖 **PROMPT en Modo Agent:**
-
-```
-Ejecuta la aplicación Flask de Contoso Banco
-```
-
-📝 **Alternativa manual:**
-```bash
-cd contoso-banco
-python app.py
-```
-
-**Abre en el navegador:** `http://127.0.0.1:5000/`
-
-✅ **Verificar:**
-- Swagger UI se muestra con el título "API de Contoso Banco"
-- Los endpoints de clientes y cuentas aparecen organizados por namespace
-- Puedes probar los endpoints directamente desde Swagger (botón "Try it out")
-- GET `/api/clientes` retorna los clientes de ejemplo
-
-> 🌟 **Momento wow:** ¡Con Flask-RESTX, Swagger UI se genera **automáticamente** sin necesidad de configuración adicional! Prueba hacer un POST desde Swagger para crear un nuevo cliente.
-
----
-
-### Paso 1.8: Agregar endpoint de transacciones (desafío guiado)
-
-Este paso es un **mini-desafío**. Usa lo que aprendiste para crear la funcionalidad de transacciones con la ayuda de Copilot.
-
-🤖 **PROMPT sugerido (adáptalo a tu estilo):**
-
-```
-@workspace Basándote en los patrones existentes del proyecto, crea la funcionalidad de transacciones bancarias:
-
-1. Modelo en modelos/transaccion.py con:
-   - Campos: id, cuenta_origen_id, cuenta_destino_id, tipo (deposito/retiro/transferencia), monto, fecha, descripcion
-   - Datos de ejemplo precargados
-   - Validación: el monto debe ser positivo
-
-2. Registra los endpoints de transacciones en app.py con un namespace /api/transacciones
-3. Incluye documentación Swagger para cada endpoint
-```
-
-> 💡 **Observa:** Al usar `@workspace`, Copilot analiza los archivos existentes y genera código que **sigue los mismos patrones** que ya usaste en clientes y cuentas.
-
----
-
-### 🛠️ Troubleshooting Ejercicio 1
-
-| Problema | Solución |
-|----------|----------|
-| `ModuleNotFoundError: flask_restx` | Ejecuta `pip install -r requirements.txt` |
-| Swagger no aparece | Verifica que `Api()` esté inicializado en `app.py` |
-| Puerto en uso | Cambia el puerto: `app.run(port=5001)` |
-| Copilot genera código en inglés | Agrega "Todo en español" al inicio del prompt |
-| Error de importación | Verifica que `modelos/` tenga un archivo `__init__.py` |
-
----
-
-## 🔬 Ejercicio 2: Frontend e Integración (25-30 min)
-
-> ⚠️ **PRERREQUISITO:** Este ejercicio requiere que la API del Ejercicio 1 esté funcionando.
-
-> 📝 **ENFOQUE SIMPLE:** El frontend es **una sola página HTML** (`templates/index.html`) servida por Flask con `render_template`. Usa Bootstrap 5 vía CDN y JavaScript vanilla con `fetch()` para llamar a la API. **No se usa React, npm ni ningún framework frontend** — todo está en un solo archivo HTML.
-
-### Objetivos
-
-- ✅ Crear una página HTML servida por Flask que consuma la API
-- ✅ Usar Copilot para generar código JavaScript vanilla con `fetch()`
-- ✅ Integrar Bootstrap 5 vía CDN para una interfaz visual atractiva
-- ✅ Practicar el uso de `/explain` para entender código generado
-
-### Paso 2.1: Crear instrucciones de Copilot para el proyecto
-
-> ⚠️ **IMPORTANTE:** Este paso configura a Copilot para que siga los estándares del proyecto en **todos** los archivos que genere de ahora en adelante.
 
 🤖 **PROMPT en Modo Agent:**
 
@@ -576,9 +374,197 @@ Este es un sistema bancario para Contoso Banco que gestiona clientes, cuentas y 
 
 ---
 
-### Paso 2.2: Crear la página HTML del frontend
+### Paso 1.3: Crear estructura del proyecto e instalar dependencias
 
-> 💡 **NOTA:** Todo el frontend vive en un solo archivo `templates/index.html`. Flask lo sirve con `render_template` y el JavaScript vanilla dentro del HTML usa `fetch()` para comunicarse con la API.
+🤖 **PROMPT en Modo Agent:**
+
+```
+Crea la estructura inicial del proyecto Contoso Banco con sus dependencias:
+
+1. Estructura de carpetas:
+   contoso-banco/
+   ├── app.py
+   ├── requirements.txt (flask, flask-restx, pytest)
+   ├── modelos/
+   │   └── __init__.py
+   ├── static/
+   ├── templates/
+   └── tests/
+       └── __init__.py
+
+2. Instala las dependencias con: pip install -r requirements.txt
+```
+
+📝 **Alternativa manual** (si el agente no ejecuta):
+```bash
+mkdir -p contoso-banco/modelos contoso-banco/static contoso-banco/templates contoso-banco/tests
+touch contoso-banco/app.py contoso-banco/requirements.txt
+touch contoso-banco/modelos/__init__.py contoso-banco/tests/__init__.py
+
+# Crear requirements.txt
+echo -e "flask\nflask-restx\npytest" > contoso-banco/requirements.txt
+
+# Instalar dependencias
+cd contoso-banco
+pip install -r requirements.txt
+```
+
+> 📝 **Nota:** Los archivos `__init__.py` son necesarios para que Python reconozca `modelos/` y `tests/` como paquetes importables. Sin ellos, los imports como `from modelos.cliente import ...` fallarán.
+
+---
+
+### Paso 1.4: Crear los modelos de datos con Copilot
+
+Ahora vamos a ver cómo Copilot nos ayuda a escribir código a partir de **comentarios descriptivos**. En lugar de pedirle el código exacto, le daremos contexto e intención.
+
+🤖 **PROMPT en Modo Agent:**
+
+```
+Crea el archivo contoso-banco/modelos/cliente.py con el modelo de datos para los clientes de Contoso Banco.
+
+El modelo debe incluir:
+- Un diccionario en memoria como base de datos simulada
+- Datos de ejemplo precargados (3 clientes ficticios con nombres en español)
+- Campos: id, nombre, email, telefono, direccion
+- Funciones para: obtener todos, obtener por id, crear, actualizar, eliminar
+- Cada función debe tener un comentario en español que describa su propósito
+```
+
+📝 **¿La sugerencia es útil?** Observa el código generado:
+- ¿Copilot usó nombres en español? 
+- ¿Los datos de ejemplo son coherentes con un banco?
+- ¿Necesitas ajustar algún campo?
+
+> 💡 **Tip:** Si Copilot genera el código en inglés, prueba agregar al prompt: *"Recuerda seguir las instrucciones de .github/copilot-instructions.md"*. Esto refuerza las convenciones que configuraste en el Paso 1.2.
+
+---
+
+### Paso 1.5: Crear el modelo de cuentas bancarias
+
+Ahora usaremos Copilot para generar el modelo de cuentas, siguiendo el mismo patrón que usamos con clientes.
+
+🤖 **PROMPT en Modo Agent:**
+
+```
+Crea el archivo contoso-banco/modelos/cuenta.py para las cuentas bancarias de Contoso Banco.
+
+Necesito un modelo similar a modelos/cliente.py pero para cuentas bancarias con:
+- Campos: id, cliente_id, numero_cuenta, tipo_cuenta (ahorro/corriente), saldo, estado (activa/inactiva/bloqueada), fecha_apertura
+- Datos de ejemplo que coincidan con los clientes existentes
+- Validación: el saldo no puede ser negativo
+
+Sigue el mismo patrón y estilo que modelos/cliente.py
+```
+
+📝 **Observa:**
+- ¿Copilot detectó el patrón de `cliente.py` y generó código consistente?
+- ¿Los datos de ejemplo usan `cliente_id` que coinciden con los clientes existentes?
+- ¿Incluyó la validación de saldo negativo que pediste?
+
+> 🌟 **Momento wow:** Al mencionar "sigue el mismo patrón que modelos/cliente.py", Copilot analiza el archivo existente y replica su estructura. ¡Cada persona puede obtener un resultado ligeramente diferente!
+
+---
+
+### Paso 1.6: Crear la aplicación Flask con Swagger
+
+Ahora le pediremos a Copilot que genere la aplicación principal. Observa cómo con un prompt conciso y orientado a la intención, Copilot puede generar una app completa.
+
+🤖 **PROMPT en Modo Agent:**
+
+```
+Crea contoso-banco/app.py como la aplicación principal de Contoso Banco.
+
+Configura Flask con Flask-RESTX para tener Swagger UI automático.
+Título: "API de Contoso Banco", versión 1.0.
+Incluye dos namespaces con endpoints CRUD completos:
+  - /api/clientes (usando modelos/cliente.py)
+  - /api/cuentas (usando modelos/cuenta.py)
+Agrega también una ruta "/" que renderice templates/index.html para servir el frontend.
+Incluye decoradores @ns.doc() y modelos de Swagger con api.model() para la documentación.
+```
+
+> 💡 **Si la sugerencia no incluye algo que necesitas** (por ejemplo, falta la documentación Swagger o la ruta del frontend), prueba un prompt de seguimiento como: *"Agrega modelos de Swagger para documentar los esquemas de request/response de cada endpoint"* o *"Agrega la ruta / para servir el frontend con render_template"*. Iterar es parte natural de trabajar con Copilot.
+
+---
+
+### Paso 1.7: Ejecutar y explorar Swagger
+
+🤖 **PROMPT en Modo Agent:**
+
+```
+Ejecuta la aplicación Flask de Contoso Banco
+```
+
+📝 **Alternativa manual:**
+```bash
+cd contoso-banco
+python app.py
+```
+
+**Abre en el navegador:** `http://127.0.0.1:5000/api/doc`
+
+✅ **Verificar:**
+- Swagger UI se muestra con el título "API de Contoso Banco"
+- Los endpoints de clientes y cuentas aparecen organizados por namespace
+- Puedes probar los endpoints directamente desde Swagger (botón "Try it out")
+- GET `/api/clientes` retorna los clientes de ejemplo
+
+> 🌟 **Momento wow:** ¡Con Flask-RESTX, Swagger UI se genera **automáticamente** sin necesidad de configuración adicional! Prueba hacer un POST desde Swagger para crear un nuevo cliente.
+
+---
+
+### Paso 1.8: Agregar endpoint de transacciones (⭐ desafío bonus)
+
+> 📝 **Este paso es OPCIONAL.** Es un desafío para quienes terminaron los pasos anteriores antes de tiempo. Si el grupo va justo de tiempo, el instructor puede indicar que lo salten y pasen directamente al Ejercicio 2.
+
+Este paso es un **mini-desafío**. Usa lo que aprendiste para crear la funcionalidad de transacciones con la ayuda de Copilot.
+
+🤖 **PROMPT sugerido (adáptalo a tu estilo):**
+
+```
+@workspace Basándote en los patrones existentes del proyecto, crea la funcionalidad de transacciones bancarias:
+
+1. Modelo en modelos/transaccion.py con:
+   - Campos: id, cuenta_origen_id, cuenta_destino_id, tipo (deposito/retiro/transferencia), monto, fecha, descripcion
+   - Datos de ejemplo precargados
+   - Validación: el monto debe ser positivo
+
+2. Registra los endpoints de transacciones en app.py con un namespace /api/transacciones
+3. Incluye documentación Swagger para cada endpoint
+```
+
+> 💡 **Observa:** Al usar `@workspace`, Copilot analiza los archivos existentes y genera código que **sigue los mismos patrones** que ya usaste en clientes y cuentas.
+
+---
+
+### 🛠️ Troubleshooting Ejercicio 1
+
+| Problema | Solución |
+|----------|----------|
+| `ModuleNotFoundError: flask_restx` | Ejecuta `pip install -r requirements.txt` |
+| `ModuleNotFoundError` al importar modelos | Verifica que `modelos/__init__.py` exista (se creó en el Paso 1.3) |
+| Swagger no aparece | Verifica que `Api()` esté inicializado en `app.py` y abre `/api/doc` |
+| Puerto en uso | Cambia el puerto: `app.run(port=5001)` |
+| Copilot genera código en inglés | Refuerza con "Sigue las instrucciones de .github/copilot-instructions.md" |
+
+---
+
+## 🔬 Ejercicio 2: Frontend e Integración (25-30 min)
+
+> ⚠️ **PRERREQUISITO:** Este ejercicio requiere que la API del Ejercicio 1 esté funcionando.
+
+> 📝 **ENFOQUE SIMPLE:** El frontend es **una sola página HTML** (`templates/index.html`) servida por Flask con `render_template`. Usa Bootstrap 5 vía CDN y JavaScript vanilla con `fetch()` para llamar a la API. **No se usa React, npm ni ningún framework frontend** — todo está en un solo archivo HTML.
+
+### Objetivos
+
+- ✅ Crear una página HTML servida por Flask que consuma la API
+- ✅ Usar Copilot para generar código JavaScript vanilla con `fetch()`
+- ✅ Integrar Bootstrap 5 vía CDN para una interfaz visual atractiva
+- ✅ Practicar el uso de `/explain` para entender código generado
+
+### Paso 2.1: Crear la página HTML del frontend
+
+> 💡 **NOTA:** Todo el frontend vive en un solo archivo `templates/index.html`. Flask lo sirve con `render_template` (la ruta `/` ya debería estar configurada en `app.py` desde el Paso 1.6). El JavaScript vanilla dentro del HTML usa `fetch()` para comunicarse con la API.
 
 🤖 **PROMPT en Modo Agent:**
 
@@ -590,9 +576,9 @@ Es una sola página HTML con JavaScript vanilla embebido (sin frameworks como Re
 Requisitos:
 1. Usar Bootstrap 5 via CDN (no instalar localmente, no usar npm)
 2. Header con el nombre "Contoso Banco" y un ícono de banco (emoji o icono Bootstrap)
-3. Barra de navegación con tabs: Inicio, Clientes, Cuentas, Transacciones
+3. Barra de navegación con tabs: Inicio, Clientes, Cuentas
 4. Sección de Inicio con:
-   - Tarjetas (cards) mostrando estadísticas: Total Clientes, Total Cuentas, Total Transacciones
+   - Tarjetas (cards) mostrando estadísticas: Total Clientes, Total Cuentas
    - Las estadísticas se cargan dinámicamente desde la API con fetch()
 5. Sección de Clientes con:
    - Tabla con los datos de clientes (se carga desde GET /api/clientes)
@@ -606,9 +592,11 @@ El JavaScript debe usar fetch() para consumir la API en /api/ (misma URL base).
 Incluye manejo de errores con mensajes amigables al usuario.
 ```
 
+> 📝 **Nota:** Observa que la barra de navegación solo incluye **Inicio, Clientes y Cuentas**. Si completaste el desafío bonus de transacciones (Paso 1.8), puedes agregar un tab de Transacciones más adelante.
+
 ---
 
-### Paso 2.3: Agregar la sección de Cuentas al HTML
+### Paso 2.2: Agregar la sección de Cuentas al HTML
 
 🤖 **PROMPT en Modo Agent:**
 
@@ -632,22 +620,27 @@ Usa el mismo patrón de JavaScript vanilla con fetch() que ya existe en la secci
 
 ---
 
-### Paso 2.4: Servir el frontend desde Flask
+### Paso 2.3: Verificar la ruta del frontend en Flask
+
+> 📝 **Este paso puede ser innecesario** si en el Paso 1.6 Copilot ya incluyó la ruta `"/"` con `render_template('index.html')` en `app.py`. Verifica rápidamente:
+
+🤖 **PROMPT en Modo Ask:**
+
+```
+@workspace ¿El archivo app.py ya tiene configurada una ruta "/" que sirva templates/index.html?
+```
+
+Si la respuesta es **sí**, pasa directo al Paso 2.4. Si la respuesta es **no**:
 
 🤖 **PROMPT en Modo Agent:**
 
 ```
-@workspace Actualiza app.py para servir el frontend HTML.
-
-Agrega:
-1. Una ruta "/" que renderice templates/index.html
-2. Asegúrate de que la carpeta static/ esté configurada para servir archivos CSS/JS si los hay
-3. Mantén todos los endpoints de la API existentes sin cambios
+@workspace Actualiza app.py para agregar una ruta "/" que renderice templates/index.html con render_template, sin modificar los endpoints de la API existentes.
 ```
 
 ---
 
-### Paso 2.5: Ejecutar y probar la integración
+### Paso 2.4: Ejecutar y probar la integración
 
 🤖 **PROMPT en Modo Agent:**
 
@@ -675,7 +668,7 @@ python app.py
 
 ---
 
-### Paso 2.6: Usar /explain para entender código (demostración)
+### Paso 2.5: Usar /explain para entender código (demostración)
 
 > 💡 **CONCEPTO:** El comando `/explain` es perfecto para entender código que Copilot generó.
 
@@ -695,17 +688,19 @@ python app.py
 
 | Problema | Solución |
 |----------|----------|
+| Página en blanco en `/` | Verifica que `app.py` tenga la ruta `/` con `render_template('index.html')` (Paso 2.3) |
 | Fetch falla con "Network Error" | Confirma que la API esté corriendo en el puerto correcto |
 | Bootstrap no carga | Verifica tu conexión a internet (se usa CDN) |
 | Modal no se abre | Verifica que el JS de Bootstrap CDN esté incluido en el HTML |
 | Datos no se muestran en la tabla | Abre la consola del navegador (F12) para ver errores |
-| Página en blanco en `/` | Verifica que `app.py` tenga la ruta `/` con `render_template('index.html')` |
 
 ---
 
 ## 🔬 Ejercicio 3: Tests y Refactoring (20-25 min)
 
 > ⚠️ **PRERREQUISITO:** Este ejercicio requiere haber completado el Ejercicio 1 con la API funcionando.
+
+> 🎓 **Nota para el instructor:** Si el tiempo es limitado, prioriza los Pasos 3.1–3.3 (generar y ejecutar tests). Los Pasos 3.4–3.5 (refactoring y documentación) son valiosos pero pueden omitirse sin afectar la experiencia central del workshop.
 
 ### Objetivos
 
@@ -758,10 +753,11 @@ Requisitos:
 Guarda las pruebas generadas en contoso-banco/tests/test_cliente.py
 
 Asegúrate de que:
-1. La carpeta tests/ tenga un archivo __init__.py
-2. Los imports sean correctos para la estructura del proyecto
-3. Incluye un fixture de pytest que reinicie los datos del diccionario en memoria antes de cada prueba
+1. Los imports sean correctos para la estructura del proyecto
+2. Incluye un fixture de pytest que reinicie los datos del diccionario en memoria antes de cada prueba
 ```
+
+> 📝 **Nota:** El archivo `tests/__init__.py` ya se creó en el Paso 1.3, así que los imports deberían funcionar directamente.
 
 ---
 
@@ -812,7 +808,7 @@ python -m pytest tests/ -v
 
 ---
 
-### Paso 3.5: Refactoring con /fix y /explain
+### Paso 3.5: Refactoring con /fix y /explain *(si hay tiempo)*
 
 > 💡 **CONCEPTO:** Ahora usaremos Copilot para **mejorar** el código existente.
 
@@ -842,7 +838,7 @@ Después, si Copilot sugiere mejoras:
 
 ---
 
-### Paso 3.6: Generar documentación con /doc
+### Paso 3.6: Generar documentación con /doc *(si hay tiempo)*
 
 📍 **Instrucciones:**
 1. Abre `contoso-banco/modelos/cuenta.py`
@@ -868,7 +864,7 @@ Incluye:
 
 | Problema | Solución |
 |----------|----------|
-| `ModuleNotFoundError` en tests | Verifica los imports y que `__init__.py` exista en cada carpeta |
+| `ModuleNotFoundError` en tests | Verifica que `__init__.py` exista en `modelos/` y `tests/` (creados en Paso 1.3) |
 | Tests fallan por datos compartidos | Usa un fixture que reinicie el diccionario en memoria |
 | pytest no encuentra los tests | Ejecuta desde la raíz del proyecto: `python -m pytest tests/ -v` |
 | `/tests` genera código incompleto | Intenta seleccionar menos código o ser más específico en el prompt |
@@ -916,6 +912,22 @@ Incluye:
 | **Contexto del negocio** | Mencionar "Contoso Banco", "cuenta bancaria", "transacción" |
 | **Iterar sobre sugerencias** | Si la primera sugerencia no es perfecta, ajusta tu comentario |
 | **Usar @workspace** | Para que Copilot entienda tu estructura de proyecto |
+| **Referenciar archivos** | "Sigue el patrón de cliente.py" para generar código consistente |
+
+---
+
+## 🆘 ¿Te quedaste atrás?
+
+No te preocupes — el valor del workshop está en **experimentar con Copilot**, no en terminar todo el código.
+
+| Situación | Qué hacer |
+|-----------|-----------|
+| No terminé el Ejercicio 1 | Pide al instructor la solución de referencia para poder continuar con el Ejercicio 2 |
+| No terminé el Ejercicio 2 | El Ejercicio 3 solo necesita la API (Ejercicio 1). Puedes hacer tests sin frontend |
+| No terminé el desafío de transacciones | ¡Es bonus! No afecta el resto del workshop |
+| Copilot genera algo diferente a mi vecino | Eso es **normal y esperado**. Comparen resultados — es un buen ejercicio de aprendizaje |
+
+> 🎓 **Para el instructor:** Se recomienda tener una rama `solucion` en el repositorio del workshop con el código completo de referencia. Esto permite que participantes que se queden atrás puedan alcanzar al grupo descargando los archivos necesarios.
 
 ---
 
@@ -923,12 +935,16 @@ Incluye:
 
 Al terminar el workshop, deberías tener:
 
+### Configuración de Copilot
+- [ ] `.github/copilot-instructions.md` — Instrucciones del proyecto
+
 ### Proyecto Backend
-- [ ] `contoso-banco/app.py` — Aplicación Flask con Swagger
+- [ ] `contoso-banco/app.py` — Aplicación Flask con Swagger y ruta frontend
 - [ ] `contoso-banco/requirements.txt` — Dependencias del proyecto
+- [ ] `contoso-banco/modelos/__init__.py` — Paquete de modelos
 - [ ] `contoso-banco/modelos/cliente.py` — Modelo de clientes
 - [ ] `contoso-banco/modelos/cuenta.py` — Modelo de cuentas
-- [ ] `contoso-banco/modelos/transaccion.py` — Modelo de transacciones
+- [ ] `contoso-banco/modelos/transaccion.py` — Modelo de transacciones *(⭐ bonus)*
 
 ### Frontend (página HTML servida por Flask)
 - [ ] `contoso-banco/templates/index.html` — Página HTML con Bootstrap 5 CDN y JavaScript vanilla
@@ -937,17 +953,15 @@ Al terminar el workshop, deberías tener:
 - [ ] Estadísticas dinámicas en la página de inicio
 
 ### Swagger
-- [ ] Swagger UI accesible y funcional
+- [ ] Swagger UI accesible y funcional en `/api/doc`
 - [ ] Endpoints documentados con modelos de request/response
 - [ ] Posibilidad de probar endpoints desde Swagger ("Try it out")
 
 ### Pruebas
+- [ ] `contoso-banco/tests/__init__.py` — Paquete de tests
 - [ ] `contoso-banco/tests/test_cliente.py` — Pruebas unitarias
 - [ ] `contoso-banco/tests/test_api.py` — Pruebas de integración
 - [ ] Todas las pruebas pasan con `pytest`
-
-### Configuración de Copilot
-- [ ] `.github/copilot-instructions.md` — Instrucciones del proyecto
 
 ---
 
@@ -998,9 +1012,9 @@ Sí, y eso es **intencional**. Copilot aprende del contexto (tu código, tus com
 
 ### ¿Cómo hago que Copilot genere código en español?
 
-1. Configúralo en `.github/copilot-instructions.md` (esto aplica para todo el proyecto)
+1. Configúralo en `.github/copilot-instructions.md` (Paso 1.2 — aplica para todo el proyecto)
 2. Escribe comentarios y nombres de variables en español
-3. Si aún no tienes `copilot-instructions.md`, agrega *"Todo en español"* al final de tu prompt
+3. Si aún genera en inglés, agrega *"Sigue las instrucciones de .github/copilot-instructions.md"* al prompt
 
 ### ¿Qué hago si Copilot sugiere código incorrecto?
 
@@ -1008,6 +1022,10 @@ Sí, y eso es **intencional**. Copilot aprende del contexto (tu código, tus com
 2. Presiona `Esc` para rechazar y ajusta tu comentario/prompt
 3. Usa `Alt+]` para ver sugerencias alternativas
 4. Recuerda: Copilot es un **asistente**, no un reemplazo del desarrollador
+
+### ¿Qué pasa si mi interfaz de Copilot se ve diferente?
+
+La interfaz de GitHub Copilot (modos, íconos, selectores) se actualiza con frecuencia. Si los íconos o la ubicación de los modos no coinciden exactamente con lo descrito en este workshop, consulta la [documentación oficial de VS Code + Copilot](https://code.visualstudio.com/docs/copilot/overview) o pregunta al instructor.
 
 ---
 
